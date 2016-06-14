@@ -11,36 +11,53 @@
 <body>
     <h3> Bargain</h3>
     <div class="main container-fluid" id="control">
-        <button class="btn btn-default" id="newoffer">NewOffer</button>
-        <button class="btn btn-default" id="customer">Customer</button>
-        <button class="btn btn-default" id="vendor">Vendor</button>
+        <div>
+            <button class="btn btn-default" id="newoffer">NewOffer</button>
+        </div>
+        <div>
+            <input type="text" id="custBargainPrice" placeholder="e.g. bragain Price" />
+            <button class="btn btn-default" id="customer">Customer</button>
+        </div>
+        <div>
+            <input type="text" id="vendBargainPrice" placeholder="e.g. bragain Price" />
+            <button class="btn btn-default" id="vendor">Vendor</button>
+        </div>
     </div>
 
-    <div class="main" id="display">       
+    <div class="main" id="display">
     </div>
 
     <script>
         $(document).ready(function () {
 
             var originalOffer = new CPM.Offer(1, "CatFood", 34.00, Date.UTC, 0.8);
-            var custoffer = null, vendoroffer;
-            document.getElementById("newoffer").disabled = false;       
-            
+            var custoffer = null, vendoroffer = null;
+            document.getElementById("newoffer").disabled = false;
+
 
             //Original Offer
             $('#newoffer').click(function () {
-                var publishHtml = originalOffer.publish(originalOffer.product, originalOffer.price, "vendordisplay");                
+                var publishHtml = originalOffer.publish(originalOffer.product, originalOffer.price, "vendordisplay");
                 //console.log("publishHtml:> " + publishHtml);
-                  
-                
             });
 
             //Customer bargain
             $('#customer').click(function () {
-                if (vendoroffer === null || vendoroffer == undefined) {
-                    custoffer = originalOffer.Bargain(originalOffer, "customer");
-                } else {
-                    custoffer = vendoroffer.Bargain(originalOffer, "customer");
+                var custBargainPrice = document.getElementById("custBargainPrice").value
+                console.log(custBargainPrice);
+
+                if (vendoroffer === null || vendoroffer == undefined)
+                {   
+                    custoffer = originalOffer.Bargain(originalOffer, "customer", custBargainPrice);
+                }
+                else
+                {
+                    if (vendoroffer._sold) {
+                        console.log("END OF BARGAIN");
+                    }
+                    else {
+                        custoffer = vendoroffer.Bargain(originalOffer, "customer", custBargainPrice);
+                    }
                 }
 
                 var publishHtml = custoffer.publish("catFood", custoffer.price, "customerdisplay");
@@ -48,23 +65,27 @@
                 if (custoffer !== null) {
                     document.getElementById("newoffer").disabled = true;
                 }
-                       
+
             });
 
             //Vendor Bargain
             $('#vendor').click(function () {
-                if(custoffer._)
-                vendoroffer = custoffer.Bargain(originalOffer, "vendor");
+                var vendBargainPrice = document.getElementById("vendBargainPrice").value
+                console.log(vendBargainPrice);
+
+                vendoroffer = custoffer.Bargain(originalOffer, "vendor", vendBargainPrice);
 
                 var publishHtml = vendoroffer.publish("catFood", vendoroffer.price, "vendordisplay");
                 //console.log("vendoroffer : " + vendoroffer.price.toFixed(2));
 
-            
+
             });
 
         });
 
     </script>
 </body>
+
+
 
 </html>

@@ -1,15 +1,92 @@
 ﻿<!DOCTYPE html>
-
-<html lang="en">
+<html>
 <head>
+    <title>Bargain Page</title>
     <meta charset="utf-8" />
-    <title>TypeScript HTML App</title>
-    <link rel="stylesheet" href="app.css" type="text/css" />
-    <script src="app.js"></script>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css">
+    <script src="http://code.jquery.com/jquery-2.1.4.js"></script>
+    <link href="app.css" rel="stylesheet" />
+    <script src="Scripts/Bargain.js"></script>
 </head>
 <body>
-    <h1>TypeScript HTML App</h1>
+    <h3> Bargain</h3>
+    <div class="main container-fluid" id="control">
+        <div>
+            <button class="btn btn-default" id="newoffer">NewOffer</button>
+        </div>
+        <div>
+            <input type="text" id="custBargainPrice" placeholder="e.g. bragain Price" />
+            <button class="btn btn-default" id="customer">Customer</button>
+        </div>
+        <div>
+            <input type="text" id="vendBargainPrice" placeholder="e.g. bragain Price" />
+            <button class="btn btn-default" id="vendor">Vendor</button>
+        </div>
+    </div>
 
-    <div id="content"></div>
+    <div class="main" id="display">
+    </div>
+
+    <script>
+        $(document).ready(function () {
+
+            var originalOffer = new CPM.Offer(1, "CatFood", 34.00, Date.UTC, 0.8);
+            var custoffer = null, vendoroffer = null;
+            document.getElementById("newoffer").disabled = false;
+
+
+            //Original Offer
+            $('#newoffer').click(function () {
+                var publishHtml = originalOffer.publish(originalOffer.product, originalOffer.price, "vendordisplay");
+                //console.log("publishHtml:> " + publishHtml);
+            });
+
+            //Customer bargain
+            $('#customer').click(function () {
+                var custBargainPrice = document.getElementById("custBargainPrice").value
+                console.log(custBargainPrice);
+
+                if (vendoroffer === null || vendoroffer == undefined)
+                {
+                    custoffer = originalOffer.Bargain(originalOffer, "customer", custBargainPrice);
+                }
+                else
+                {
+                    if (vendoroffer._sold) {
+                        console.log("END OF BARGAIN");
+                    }
+                    else {
+                        custoffer = vendoroffer.Bargain(originalOffer, "customer", custBargainPrice);
+                    }
+                }
+
+                var publishHtml = custoffer.publish("catFood", custoffer.price, "customerdisplay");
+                //console.log("custoffer : " + custoffer.price.toFixed(2));
+                if (custoffer !== null) {
+                    document.getElementById("newoffer").disabled = true;
+                }
+
+            });
+
+            //Vendor Bargain
+            $('#vendor').click(function () {
+                var vendBargainPrice = document.getElementById("vendBargainPrice").value
+                console.log(vendBargainPrice);
+
+                vendoroffer = custoffer.Bargain(originalOffer, "vendor", vendBargainPrice);
+
+                var publishHtml = vendoroffer.publish("catFood", vendoroffer.price, "vendordisplay");
+                //console.log("vendoroffer : " + vendoroffer.price.toFixed(2));
+
+
+            });
+
+        });
+
+    </script>
 </body>
+
+
+
 </html>

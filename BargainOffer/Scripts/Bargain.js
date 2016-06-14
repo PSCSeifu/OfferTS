@@ -32,7 +32,7 @@ var CPM;
             var activeValue = "[$NAME$ | $PR$ | $TTL$ | $SOLD$]";
             var result = activeValue
                 .replace('$NAME$', this._product)
-                .replace("$PR$", this._price.toFixed(2))
+                .replace("$PR$", this._price.toString())
                 .replace('$TTL$', "time")
                 .replace('$SOLD$', this._sold.toString());
             var htmlout = this.publishBlock(result, className);
@@ -51,25 +51,33 @@ var CPM;
         Offer.prototype.showSaleBanner = function () {
             var html = "ITEM HAS BEEN SOLD!";
         };
-        Offer.prototype.Bargain = function (offer, type) {
+        Offer.prototype.Bargain = function (offer, type, bargainPrice) {
             if (type == "customer" && this._sold === false) {
                 console.log("it is a customer");
-                return this.customerBargain(offer);
+                return this.customerBargain(offer, bargainPrice);
             }
             if (type == "vendor" && this._sold === false) {
                 console.log("It is a Vendor");
-                return this.vendorBargain(offer);
+                return this.vendorBargain(offer, bargainPrice);
             }
         };
-        Offer.prototype.customerBargain = function (offer) {
-            var rand = new Random();
+        Offer.prototype.customerBargain = function (offer, customerBargain) {
+            //var rand = new Random();
             if (offer._sold == false) {
-                this._price = (0.75 * offer.price) + (0.20 * offer.price * rand.getfracton());
+                //bargain for a lower price
+                //this._price = (0.75 * offer.rice) + (0.20 * offer.price * rand.getfracton());
+                console.log("customerBargain:>" + customerBargain);
+                this._price = customerBargain;
+                console.log("this._price:>" + this._price);
+            }
+            else {
+                console.log("CUSTOMER SEES ITEM IS SOLD");
+                this._sold = true;
             }
             //this._expiryDate = 
             return this;
         };
-        Offer.prototype.vendorBargain = function (offer) {
+        Offer.prototype.vendorBargain = function (offer, customerBargain) {
             console.log(offer.price <= this._price);
             if (offer.price <= this._price) {
                 //Accept offer
@@ -90,7 +98,7 @@ var CPM;
                 }
                 else {
                     //bargain for a higher price                    
-                    this._price = this._price + (this._price * 0.08);
+                    this._price = customerBargain * 1.08;
                     console.log("Vendor ups price : " + this._price);
                 }
             }
