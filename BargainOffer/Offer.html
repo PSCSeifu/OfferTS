@@ -1,0 +1,70 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Bargain Page</title>
+	<meta charset="utf-8" />
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css">
+    <script src="http://code.jquery.com/jquery-2.1.4.js"></script>   
+    <link href="app.css" rel="stylesheet" /> 
+    <script src="Scripts/Bargain.js"></script></head>
+<body>
+    <h3> Bargain</h3>
+    <div class="main container-fluid" id="control">
+        <button class="btn btn-default" id="newoffer">NewOffer</button>
+        <button class="btn btn-default" id="customer">Customer</button>
+        <button class="btn btn-default" id="vendor">Vendor</button>
+    </div>
+
+    <div class="main" id="display">       
+    </div>
+
+    <script>
+        $(document).ready(function () {
+
+            var originalOffer = new CPM.Offer(1, "CatFood", 34.00, Date.UTC, 0.8);
+            var custoffer = null, vendoroffer;
+            document.getElementById("newoffer").disabled = false;       
+            
+
+            //Original Offer
+            $('#newoffer').click(function () {
+                var publishHtml = originalOffer.publish(originalOffer.product, originalOffer.price, "vendordisplay");                
+                //console.log("publishHtml:> " + publishHtml);
+                  
+                
+            });
+
+            //Customer bargain
+            $('#customer').click(function () {
+                if (vendoroffer === null || vendoroffer == undefined) {
+                    custoffer = originalOffer.Bargain(originalOffer, "customer");
+                } else {
+                    custoffer = vendoroffer.Bargain(originalOffer, "customer");
+                }
+
+                var publishHtml = custoffer.publish("catFood", custoffer.price, "customerdisplay");
+                //console.log("custoffer : " + custoffer.price.toFixed(2));
+                if (custoffer !== null) {
+                    document.getElementById("newoffer").disabled = true;
+                }
+                       
+            });
+
+            //Vendor Bargain
+            $('#vendor').click(function () {
+                if(custoffer._)
+                vendoroffer = custoffer.Bargain(originalOffer, "vendor");
+
+                var publishHtml = vendoroffer.publish("catFood", vendoroffer.price, "vendordisplay");
+                //console.log("vendoroffer : " + vendoroffer.price.toFixed(2));
+
+            
+            });
+
+        });
+
+    </script>
+</body>
+
+</html>
